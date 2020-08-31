@@ -1,0 +1,70 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+{% block mainblock %}
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>News List<br><small>You can add, delete and edit data</small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>News</li>
+        <li><a href="news_list/">List</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+    <!-- Datatables Content -->
+        <div class="block full">
+        <div class="block-title">
+            <h2><strong>News</strong> List</h2>
+        </div>
+        <div class="table-responsive">
+            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th class="text-center">Image</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Writer</th>
+                        <th>status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for news in news %}
+                    <tr>
+                        <td class="text-center">{{ news.id }}</td>
+                        <td class="text-center"><img style="display: inline-block; height: 50px; width: 50px" src="{{ news.picname.url }}" alt="avatar" class="img-circle"></td>
+                        <td>{{ news.name }}</td>
+                        <td>{{ news.date}}</td>
+                        <td>{{ news.writer }}</td>
+                        {% if news.act == 0 %}
+                        <td style="color: red">pending</td>
+                        {% elif news.act == 1 %}
+                        <td style="color: green">confirmed</td>
+                        {% endif %}
+                        <td class="text-center">
+                            <div class="btn-group">
+                                {% if perms.manager.master_user %}
+                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
+                                <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                                <a href="{% url 'news_publish' pk=news.pk %}" data-toggle="tooltip" title="publish" class="btn btn-xs btn-default">Publish</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- END Datatables Content -->
+{% endblock %}
+
+{% block footerblock %}
+    <script src="{% static 'js/pages/tablesDatatables.js' %}"></script>
+    <script>$(function(){ TablesDatatables.init(); });</script>
+{% endblock %}
